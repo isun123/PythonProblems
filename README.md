@@ -14,6 +14,6 @@ Everyone who wishes to teach or learn Python is welcome to use and adapt these p
 
 The lab specification document and the automated tester software `tester109.py` are released under the [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.txt), with no warranties implied by the author.
 
-Wordlist `words_alpha.txt` taken from [dwyl/english-words](https://github.com/dwyl/english-words).
+Wordlist `words_sorted.txt` adapted from [dwyl/english-words](https://github.com/dwyl/english-words).
 
 Text of `warandpeace.txt` taken from [Project Gutenberg](http://www.gutenberg.org/ebooks/2600).
