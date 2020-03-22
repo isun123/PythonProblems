@@ -1,7 +1,7 @@
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 
-# VERSION March 2, 2020
+# VERSION March 22, 2020
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -99,7 +99,7 @@ def test_one_function(f, testcases, expected = None, recorder = None, known = No
             if recorded and not sr.strip().startswith(recorded[count]):
                 crashed = True
                 print(f"DISCREPANCY AT TEST CASE #{count}.")
-                print(f"TEST CASE: {repr(test)})")
+                print(f"TEST CASE: {repr(test)[:300]})")
                 print(f"EXPECTED: <{recorded[count]}>")
                 print(f"RETURNED: <{sr}>")
                 break
@@ -129,6 +129,8 @@ def sort_by_source(suite):
         for (lineno, line) in enumerate(source):
             if line.startswith("def "):
                 fname = line[4:line.find('(')].strip()
+                if fname in funcs:
+                    print(f"Warning: multiple definition for {fname}")
                 funcs[fname] = lineno
         suite.sort(key = lambda x: funcs.get(x[0], 9999999))
     return suite
@@ -336,13 +338,13 @@ def milton_work_point_count_generator(seed):
         yield (hand, st)
 
 def sort_by_typing_handedness_generator():
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     yield [words]
 
 def possible_words_generator(seed):
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     rng = random.Random(seed)
@@ -391,7 +393,7 @@ def __create_random_word(n, rng):
 
 def scrabble_value_generator(seed):
     rng = random.Random(seed)
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()    
     for word in words:
@@ -509,7 +511,7 @@ def fibonacci_word_generator(seed):
         curr = curr * 2
 
 def all_cyclic_shifts_generator():
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     for word in words:
@@ -672,7 +674,7 @@ def riffle_generator(seed):
 
 def words_with_given_shape_generator(seed):
     rng = random.Random(seed)
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     for i in range(100):
@@ -703,7 +705,7 @@ def only_odd_digits_generator(seed):
 
 def pancake_scramble_generator(seed):
     rng = random.Random(seed)
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     for i in range(10000):
@@ -878,7 +880,7 @@ def __key_dist():
     return dist
 
 def autocorrect_word_generator(seed):
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     dist = __key_dist()
@@ -916,7 +918,7 @@ def is_cyclops_generator(seed):
 
 def words_with_letters_generator(seed):
     rng = random.Random(seed)
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     count = 0
@@ -1085,7 +1087,7 @@ def suppressed_digit_sum_generator(seed):
         
 def unscramble_generator(seed):
     rng = random.Random(seed)
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     count = 0
@@ -1123,7 +1125,7 @@ ups = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def substitution_words_generator(seed):
     rng = random.Random(seed)
-    f = open('words_alpha.txt', 'r', encoding='utf-8')
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
     f.close()
     yield ('ABCD', words)
@@ -1380,7 +1382,6 @@ def next_zigzag_generator(seed):
             #assert labs109.is_zigzag(curr)
             yield (curr,)
 
-
 __primes = [2, 3, 5, 7, 11, 13]
 def md_generator(seed):
     rng = random.Random(seed)
@@ -1390,7 +1391,6 @@ def md_generator(seed):
         b = rng.randint(1, 10) * 2 + 1
         yield (2, b, i + 2)
 
-
 def wythoff_array_generator(seed):
     rng = random.Random(seed)
     curr, step = 1, 1
@@ -1399,13 +1399,18 @@ def wythoff_array_generator(seed):
         curr += rng.randint(1, step)
         step += 1
 
-#discrepancy(labs109.domino_cycle,
-#            domino_cycle,
-#            domino_cycle_generator(seed))
-
+def hourglass_flips_generator(seed):
+    rng = random.Random(seed)
+    for i in range(30):
+        glasses, curr = [], rng.randint(3, 20)
+        n = rng.randint(2, 5)
+        for j in range(n):
+            glasses.append((curr, 0))
+            curr += rng.randint(1, 5)
+        t = rng.randint(curr + 1, 2 * curr)
+        yield (glasses, t)
       
 # List of test cases for the 109 functions defined.        
-  
           
 testcases = [
         
@@ -1479,7 +1484,7 @@ testcases = [
         (
         "substitution_words",
         substitution_words_generator(seed),
-        "c0232c6ef38065ccafe632f8e5d2d3d36297b56c7c329ac028"
+        "ce3286c3c0df978b9f8f508476e6f1bcba3dd30cdb35602acf"
         ),        
         (
         "taxi_zum_zum",
@@ -1499,7 +1504,7 @@ testcases = [
         (
         "unscramble",
         unscramble_generator(seed),
-        "d687545c5f459e2a3ccad4442304a1a64b1878b990916ceba7"
+        "5859988a905549959fd6905cc038e0ad214812a6444d702713"
         ),        
         (
         "suppressed_digit_sum",
@@ -1559,7 +1564,7 @@ testcases = [
         (
         "words_with_letters",
         words_with_letters_generator(seed),
-        "fb1f341f18ace24d22ac5bd704392163d03c5ba2388d9b1ae3"
+        "36cab5129635cc1495f9cff88c4b539a49a40be5585243788c"
         ),
         (
         "count_distinct_lines",
@@ -1599,7 +1604,7 @@ testcases = [
         (
         "autocorrect_word",
         autocorrect_word_generator(seed),
-        "4690c10ea523bc6052265949555bb18a6ee52fa279f7ed785b"
+        "be332e39f5a8a3431e913794d15f14b8a89b1153d89d94946a"
         ),        
         (
         "remove_after_kth",
@@ -1624,7 +1629,7 @@ testcases = [
         (
         "scrabble_value",        
         scrabble_value_generator(seed),
-        "9d81f4a3461c35d4606477baf8fbf0d8c23cf37f8decaa8ab3"
+        "b8b08a8a1a5fd687c49c5f7147fd35bc16d4c3ac88328ada64"
         ),        
         (
         "reverse_vowels",
@@ -1689,7 +1694,7 @@ testcases = [
         (
         "pancake_scramble",
         pancake_scramble_generator(seed),
-        "19dfab79ae9bb4b04b8d65462153e78f7f154023162703a83f"
+        "98fb3c9e30908ea6c2654d64d3c68ca2538927be529d75ddfe"
         ),        
         (
         "only_odd_digits",                
@@ -1744,7 +1749,7 @@ testcases = [
         (
         "words_with_given_shape",                
         words_with_given_shape_generator(seed),
-        "bf6c0783d818386d8456291925110a016870a1a950755d8e0c"
+        "96d697cd85e4effa24f659b83b18aa1adf14a1b9e14c02207b"
         ),        
         (
         "prime_factors",
@@ -1839,7 +1844,7 @@ testcases = [
         (
         "all_cyclic_shifts",
         all_cyclic_shifts_generator(),
-        "035f7589b48abd2815bee73164810853aef19fd1d74007902c"
+        "1d06f1ef0547d8441800f2dc19aa430396a0f2e8bc414e6775"
         ),               
         (
         "fibonacci_word",
@@ -1953,8 +1958,8 @@ testcases = [
         ),              
         (
         "possible_words",
-        possible_words_generator(999),                
-        "44d9517392e010fa21cbd3a45189ab5f89b570d1434dce599b"
+        possible_words_generator(seed),  
+        "7bea02b2de5dd415210774e7337464e030e90b301ae634c153"
         ),
         
         # New additions to the problem set in 2020.
@@ -1993,8 +1998,12 @@ testcases = [
         "wythoff_array",
         wythoff_array_generator(seed),
         "d9c276aee0a2914dc393b0fce677b859d3fd98e996a7bd924d"        
-        )
-         
+        ),
+        (
+        "hourglass_flips",
+        hourglass_flips_generator(seed),
+        "dabc24b96ab339c979f71ce837bed001ae149f3377e44f68de"
+        ) 
 ]
 
 import os.path
