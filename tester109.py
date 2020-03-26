@@ -1,7 +1,7 @@
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 
-# VERSION March 22, 2020
+# VERSION March 26, 2020
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -1410,6 +1410,43 @@ def hourglass_flips_generator(seed):
         t = rng.randint(curr + 1, 2 * curr)
         yield (glasses, t)
       
+def knight_jump_generator(seed):
+    rng = random.Random(seed)
+    for i in range(10000):
+        k = 2 + (i % 50)
+        steps = [1]
+        for j in range(1, k):
+            steps.append(steps[-1] + rng.randint(1, 5))
+        start = [rng.randint(10, 20) for j in range(k)]
+        rng.shuffle(steps)
+        end = [x + y * rng.choice([-1, 1]) for (x, y) in zip(start, steps)]
+        if rng.randint(1, 100) < 50:
+            end[rng.randint(0, k - 1)] += 1
+        steps.sort(reverse = True)
+        yield (tuple(steps), tuple(start), tuple(end))
+        
+def frog_collision_time_generator(seed):
+    rng = random.Random(seed)
+    count = 0
+    while count < 5000:
+        c = [rng.randint(-10, 10) for i in range(6)]
+        if c[2:4] == c[4:6] or c[2:4] == [0, 0] or c[4:6] == [0, 0]:
+            continue
+        t = rng.randint(1, 2 + 2**(count // 100))
+        x1, y1 = c[0] + t * c[2], c[1] + t * c[3]
+        x2, y2 = c[0] + t * c[4], c[1] + t * c[5]
+        if rng.randint(1, 100) < 30:
+            if rng.randint(1, 100) < 50:
+                x1 += rng.choice([-10, 10])
+            else:
+                y1 += rng.choice([-10, 10])
+        elif rng.randint(1, 100) < 10:
+            c[2], c[3] = -c[2], -c[3]    
+        if (x1, x2) != (y1, y2):
+            yield ((x1, y1, -c[2], -c[3]), (x2, y2, -c[4], -c[5]))
+            count += 1
+        
+    
 # List of test cases for the 109 functions defined.        
           
 testcases = [
@@ -2003,7 +2040,17 @@ testcases = [
         "hourglass_flips",
         hourglass_flips_generator(seed),
         "dabc24b96ab339c979f71ce837bed001ae149f3377e44f68de"
-        ) 
+        ),
+        (
+        "knight_jump",
+        knight_jump_generator(seed),
+        "6a771380844685c2356a8a1eaf97376132aeb6f112bd6f6836"        
+        ),
+        (
+        "frog_collision_time",
+        frog_collision_time_generator(seed),
+        "2767a8f92c414656971210a1beeb83f20ad197d445897aff10"        
+        )
 ]
 
 import os.path
