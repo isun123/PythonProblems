@@ -8,9 +8,9 @@ Each function is tested by giving it a large number of pseudorandomly generated 
 
 For the instructors in some corner case situation where the first 300 recorded test cases are not enough to explain why the student solution does not pass the checksum test, the tester script also contains a handy `discrepancy` function to find the discrepancies between the student solution and the private model solution for the instructor to debug a solution that fails the test with a checksum error.
 
-Some of the automated tests use the text files `warandpeace.txt` and `words_alpha.txt` as their data sources. Editing these files in any way will most likely make it impossible for the tester to reach the correct expected checksum for the functions whose testers use that particular text file, even if those functions are correct.
+Some of the automated tests use the text files `warandpeace.txt` and `words_sorted.txt` as their data sources. Editing these files in any way will most likely make it impossible for the tester to reach the correct expected checksum for the functions whose testers use that particular text file, even if those functions are correct.
 
-Everyone who wishes to teach or learn Python is welcome to use and adapt these problems for their own purposes as they see fit. The author welcomes feedback by email at ilkka.kokkarinen@gmail.com from computer science instructors who use these problems in their courses.
+Everyone who wishes to teach or learn Python is welcome to use and adapt these problems for their own purposes as they see fit. The author welcomes feedback by email at `ilkka.kokkarinen@gmail.com` from computer science instructors who use these problems in their courses.
 
 The lab specification document and the automated tester software `tester109.py` are released under the [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.txt), with no warranties implied by the author.
 
