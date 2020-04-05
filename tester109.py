@@ -1,7 +1,7 @@
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 
-# VERSION March 26, 2020
+# VERSION April 5, 2020: "Stir crazy in the quarantine"
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -23,7 +23,7 @@ cutoff = 300
 recordfile = "record.zip"
 
 # Convert dictionary or set result to a list sorted by keys to
-# guarantee that results are the same in all environments.
+# guarantee that such results are identical in all environments.
 
 def canonize(result):
     if isinstance(result, dict):        
@@ -65,6 +65,7 @@ def discrepancy(f1, f2, testcases):
         print(f"Student solution returned: {repr(d2)}")
         return False
 
+
 # Runs the function f for its test cases, calculating SHA256 checksum
 # of the results. If the checksum matches the expected, return the
 # running time, otherwise return -1. If expected == None, print out
@@ -99,7 +100,7 @@ def test_one_function(f, testcases, expected = None, recorder = None, known = No
             if recorded and not sr.strip().startswith(recorded[count]):
                 crashed = True
                 print(f"DISCREPANCY AT TEST CASE #{count}.")
-                print(f"TEST CASE: {repr(test)[:300]})")
+                print(f"TEST CASE: {repr(test)})")
                 print(f"EXPECTED: <{recorded[count]}>")
                 print(f"RETURNED: <{sr}>")
                 break
@@ -916,11 +917,11 @@ def is_cyclops_generator(seed):
                 n += rng.randint(1, 9)
         yield (n,)
 
-def words_with_letters_generator(seed):
+def words_with_letters_generator(seed):    
     rng = random.Random(seed)
     f = open('words_sorted.txt', 'r', encoding='utf-8')
     words = [x.strip() for x in f]
-    f.close()
+    f.close()    
     count = 0
     while count < 30:
         word = rng.choice(words)
@@ -1446,13 +1447,73 @@ def frog_collision_time_generator(seed):
             yield ((x1, y1, -c[2], -c[3]), (x2, y2, -c[4], -c[5]))
             count += 1
         
+def spread_the_coins_generator(seed):
+    rng = random.Random(seed)
+    for i in range(2, 500):
+        n = 10 + rng.randint(1, 2 + 2**(i//25))
+        piles, nn = [], n
+        while nn > 1:
+            c = rng.randint(nn // 3, nn)
+            piles.append(c)
+            nn -= c
+        u = rng.randint(5, n // 2)
+        a = rng.randint(1, u - 1)
+        b = u - a
+        yield (piles, a, b)
     
+
+def group_and_skip_generator(seed):
+    rng = random.Random(seed)
+    for n in range(2000):
+        b = rng.randint(1, 10)
+        a = 2 * b + rng.randint(1, 10)
+        yield (n*n, a, b)
+        
+def nearest_polygonal_number_generator(seed):
+    rng = random.Random(seed)
+    yield from [(1, 10), (1, 100), (1, 10**100)]    
+    curr = 20
+    for i in range(250):
+        for j in range(15):
+            curr = curr + rng.randint(1, curr // 10)
+            s = rng.randint(3, min(curr // 3, 300))
+            yield (curr, s)
+        curr = curr * 2
+
+def floor_power_solve_generator(seed):
+    yield from [(2018, 4), (2011, 4)]
+    rng = random.Random(seed)    
+    curr = 30
+    for i in range(140):
+        for j in range(10):
+            curr = curr + rng.randint(1, curr // 10)
+            yield (curr, j + 2)
+        curr = curr * 2
+            
+def subtract_square_generator(seed):
+    rng = random.Random(seed)
+    for i in range(1, 9):
+        curr = rng.randint(1, 10)
+        query = []
+        for j in range(4 * i):
+            query.append(curr)
+            curr = (4 * curr) // 3 + rng.randint(1, max(3, curr // 5))
+        yield (query, )
+        
+def perimeter_limit_split_generator(seed):
+    rng = random.Random(seed)
+    for a in range(10, 100):
+        for i in range(5):
+            b = rng.randint(1, a)
+            p = rng.randint(5, 3 * a)
+            yield (a, b, p) if rng.randint(0, 1) else (b, a, p)
+                
+       
 # List of test cases for the 109 functions defined.        
           
 testcases = [
         
-        # The original 109 problems.
-        
+        # The original 109 problems.        
         (
         "connected_islands",
         connected_islands_generator(seed),
@@ -2050,6 +2111,36 @@ testcases = [
         "frog_collision_time",
         frog_collision_time_generator(seed),
         "2767a8f92c414656971210a1beeb83f20ad197d445897aff10"        
+        ),
+        (
+        "spread_the_coins",
+        spread_the_coins_generator(seed),
+        "5fceeacd218e1529190ff6477d81313150ff9a79910984c9de"                
+        ), 
+        (
+        "group_and_skip",
+        group_and_skip_generator(seed),
+        "6f1dbf73dc63c5c0c2b5cebba4e2aa2e78da9c909e186ccfec"      
+        ),
+        (
+        "nearest_polygonal_number",
+        nearest_polygonal_number_generator(seed),
+        "6813a79fcc5c8249e92e0bf4c1301fde4187df58d2207b23ca"        
+        ),
+        (
+        "floor_power_solve",
+        floor_power_solve_generator(seed),
+        "177465906587f4bb545d546d9b9e4324a4fcbc46c2d3ec4a97"       
+        ),
+        (
+        "subtract_square",
+        subtract_square_generator(seed),
+        "8959f61972a8804d0b26e2ae92d30d4d3fb6f08f1bcf5e28b9"      
+        ),
+        (
+        "perimeter_limit_split",
+        perimeter_limit_split_generator(seed),
+        "eaddf8ce7e7dd40995a6be7c73d89873b47864d6fcf3d14bb9"      
         )
 ]
 
