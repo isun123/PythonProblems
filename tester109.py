@@ -1,7 +1,7 @@
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 
-# VERSION April 5, 2020: "Stir crazy in the quarantine"
+# VERSION April 6, 2020: "A brave new decade"
 
 # Ilkka Kokkarinen, ilkka.kokkarinen@gmail.com
 
@@ -13,7 +13,7 @@ import itertools
 import random
 import gzip
 
-# Fixed seed used to generate random numbers.
+# Fixed seed used to generate randorandomm numbers.
 seed = 12345
 
 # How many test cases to record in the file for each function.
@@ -233,12 +233,20 @@ def count_and_say_generator(seed):
             digits += rng.choice('0123456789') * len_
         yield (digits,)
 
-def disemvowel_generator():
-    wap = open("warandpeace.txt", encoding='utf-8')
-    text = list(wap)
-    wap.close()
-    for line in text:
-        yield (line.lower(),)
+def random_text_generator(seed):
+    rng = random.Random(seed)
+    alpha = "abcdefghijklmnopqrstuvwxyz"
+    alpha += alpha.upper()
+    punct = '.,!?'
+    for i in range(10000):
+        line = ""
+        while len(line) < 70:
+            word = "".join([rng.choice(alpha) for _ in range(rng.randint(1, 20))])
+            line += " " if len(line) > 0 else ""
+            line += word
+            if rng.randint(0, 99) < 20:
+                line += rng.choice(punct)
+        yield (line, )
 
 def group_equal_generator(seed):
     rng = random.Random(seed)
@@ -562,11 +570,8 @@ def count_consecutive_summers_generator():
         yield(i,)
 
 def detab_generator(seed):
-    wap = open("warandpeace.txt", encoding='utf-8')
-    text = list(wap)
-    wap.close()
     rng = random.Random(seed)
-    for line in text:
+    for (line,) in random_text_generator(seed):
         line = line.replace(' ', '\t')
         n = rng.randint(1, 7)
         yield (line, n, ' ')
@@ -726,13 +731,6 @@ def lattice_paths_generator(seed):
             if (xx, yy) not in tabu:
                 tabu.append((xx, yy))
         yield (x, y, tabu)
-
-def reverse_vowels_generator():
-    wap = open("warandpeace.txt", encoding='utf-8')
-    text = list(wap)
-    wap.close()
-    for line in text:
-        yield (line,)
 
 def count_carries_generator(seed):
     rng = random.Random(seed)
@@ -1731,8 +1729,8 @@ testcases = [
         ),        
         (
         "reverse_vowels",
-        reverse_vowels_generator(),
-        "2e068d3b5f7becdab871e83b2a43af23ca8bd96d37c79ab0a8"
+        random_text_generator(seed),
+        "06f67d9ccd7f91b25b023d9fccd4d0622195f15f1375da16dc"
         ),        
         (
         "riffle",
@@ -1826,8 +1824,8 @@ testcases = [
         ),
         (
         "disemvowel",
-        disemvowel_generator(),
-        "92404dc3f0587f04b13d3318cd49317040151cd69db88039d8"
+        random_text_generator(seed),
+        "9e81bfae626ddf36655f4d3c2c36208d646eee416c18671ec1"
         ),        
         (
         "count_and_say",
@@ -1902,7 +1900,7 @@ testcases = [
         (
         "detab",
         detab_generator(seed),
-        "ad9702548c38c925511d0eae52edfc2f5357163c65633b10e4"
+        "7e1453906bc31dfb59159a377dcb7dbb8451e464b88bfd04b4"
         ),
         (
         "running_median_of_three",
