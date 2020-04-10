@@ -1505,8 +1505,40 @@ def perimeter_limit_split_generator(seed):
             b = rng.randint(1, a)
             p = rng.randint(5, 3 * a)
             yield (a, b, p) if rng.randint(0, 1) else (b, a, p)
-                
-       
+
+def duplicate_digit_bonus_generator(seed):
+    rng = random.Random(seed);
+    m = 1
+    for i in range(400):
+        n = 0
+        if i % 10 == 0:
+            m += 1
+        for j in range(m):
+            if rng.randint(0, 100) < 50:
+                run = 1
+            else:
+                run = rng.randint(1, 6 + m // 10)
+            d = rng.randint(0, 9)
+            for k in range(run):
+                n = 10 * n + d
+        yield (n,)
+
+def count_word_dominators_generator(seed):
+    f = open('words_sorted.txt', 'r', encoding='utf-8')
+    words = [x.strip() for x in f]
+    f.close()
+    m = 1
+    wls = [ [w for w in words if len(w) == n] for n in range(3, 6)]
+    rng = random.Random(seed)
+    for i in range(1000):
+        wl = rng.choice(wls)
+        result = rng.sample(wl, m)
+        yield (result,)
+        result.sort(reverse = True)
+        yield (result,)
+        if(i % 10 == 4):
+            m += 1
+
 # List of test cases for the 109 functions defined.        
           
 testcases = [
@@ -2139,6 +2171,16 @@ testcases = [
         "perimeter_limit_split",
         perimeter_limit_split_generator(seed),
         "eaddf8ce7e7dd40995a6be7c73d89873b47864d6fcf3d14bb9"      
+        ),
+        (
+        "duplicate_digit_bonus",
+        duplicate_digit_bonus_generator(seed),
+        "079ceaf567ed618d2a235cfe9c95d6fb9d5c45efe4cc987a83"
+        ),
+        (
+        "count_word_dominators",
+        count_word_dominators_generator(seed),
+        "ade953572b3bf2540d892ae5d6c8912cd691305a494e3d009b"
         )
 ]
 
